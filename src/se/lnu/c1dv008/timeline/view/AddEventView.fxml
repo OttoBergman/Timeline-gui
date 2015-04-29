@@ -6,7 +6,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="600.0" type="VBox" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="se.lnu.c1dv008.timeline.controller.AddEventController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="se.lnu.c1dv008.timeline.controller.AddEventController">
    <children>
       <GridPane prefHeight="598.0" prefWidth="600.0">
         <columnConstraints>
@@ -38,7 +38,7 @@
             </TextArea>
             <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="4" GridPane.valignment="CENTER">
                <children>
-                  <Button fx:id="addEventCreate" mnemonicParsing="false" text="Create">
+                  <Button fx:id="addEventCreate" mnemonicParsing="false" onMouseClicked="#onCreate" text="Create">
                      <HBox.margin>
                         <Insets bottom="30.0" left="12.0" right="12.0" top="12.0" />
                      </HBox.margin>
@@ -46,7 +46,7 @@
                         <Font name="Ubuntu" size="18.0" />
                      </font>
                   </Button>
-                  <Button fx:id="addEventCancel" mnemonicParsing="false" text="Cancel">
+                  <Button fx:id="addEventCancel" mnemonicParsing="false" onMouseClicked="#onCancel" text="Cancel">
                      <HBox.margin>
                         <Insets bottom="12.0" right="30.0" top="12.0" />
                      </HBox.margin>
@@ -56,9 +56,9 @@
                   </Button>
                </children>
             </HBox>
-            <TextField maxWidth="300.0" promptText="Event Title" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+            <TextField fx:id="addEventTitle" maxWidth="300.0" promptText="Event Title" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
             <ColorPicker fx:id="addEventColorPicker" promptText="Background Color" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="TOP" />
          </children>
       </GridPane>
    </children>
-</fx:root>
+</VBox>

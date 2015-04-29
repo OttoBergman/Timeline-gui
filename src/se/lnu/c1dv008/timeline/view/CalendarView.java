@@ -1,5 +1,6 @@
 package se.lnu.c1dv008.timeline.view;
 
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -10,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
@@ -18,6 +20,9 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import se.lnu.c1dv008.timeline.controller.AddEventController;
+import se.lnu.c1dv008.timeline.controller.EventController;
+import se.lnu.c1dv008.timeline.controller.TimelineController;
+import se.lnu.c1dv008.timeline.dao.DB;
 import se.lnu.c1dv008.timeline.model.Event;
 import se.lnu.c1dv008.timeline.model.Timeline;
 
@@ -30,10 +35,10 @@ import java.util.List;
 public class CalendarView {
 
 	private final LocalTime firstSlotStart = LocalTime.of(0, 0);
-	private final Duration slotLength = Duration.ofMinutes(30);
+	private final Duration slotLength = Duration.ofMinutes(60);
 	private final LocalTime lastSlotStart = LocalTime.of(23, 59);
+	public static TimelineController timelineController;
 
-	
 
 	private final List<TimeSlot> timeSlots = new ArrayList<>();
 	private GridPane calendarView;
@@ -102,32 +107,40 @@ public class CalendarView {
 		titleLabel.fontProperty().setValue(new Font(20));
 		vContain.getChildren().add(titleLabel);
 		vContain.setAlignment(Pos.TOP_CENTER);
-
 		Button addEventBtn = new Button("Add Event");
 
-		addEventBtn.setOnMouseClicked(event -> {
+		addEventBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
 
-			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("AddEventView.fxml"));
-			AddEventController addEventController = fxmlLoader.getController();
-			addEventController.setTimeline(timeline);
-			Parent root = null;
-			try {
-				root = fxmlLoader.load();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				FXMLLoader fxmlLoader = new FXMLLoader(CalendarView.class.getResource("AddEventView.fxml"));
+				Parent root = null;
+				try {
+					root = fxmlLoader.load();
+					AddEventController addEventController = fxmlLoader.getController();
+					addEventController.timeline = timeline;
+					addEventController.timelineController = timelineController;
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				Stage stage = new Stage();
+				stage.initModality(Modality.APPLICATION_MODAL);
+				stage.setOpacity(1);
+				stage.setTitle("Add new event");
+				stage.setScene(new Scene(root));
+				stage.show();
 			}
-			Stage stage = new Stage();
-			stage.initModality(Modality.APPLICATION_MODAL);
-			stage.setOpacity(1);
-			stage.setTitle("Add new event");
-			stage.setScene(new Scene(root));
-			stage.showAndWait();
 		});
 
 
+
+
+
+		scroller.setMinHeight(300);
+        scroller.setPrefHeight(300);
 		vContain.getChildren().addAll(scroller, addEventBtn);
-		vContain.setPadding(new Insets(10, 5, 10, 5));
+		vContain.setPadding(new Insets(15, 5, 15, 5));
 		return vContain;
 
 	}
@@ -178,15 +191,22 @@ public class CalendarView {
 
 	public void event(Event event, int cIndex, int rIndex, int cSpan){
 
-		try {
-			calendarView.add(FXMLLoader.load(getClass().getResource("EventView.fxml")), cIndex, rIndex, cSpan, 1);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
+			FXMLLoader fxmlLoader = new FXMLLoader(CalendarView.class.getResource("EventView.fxml"));
+			try {
+                Event getEvent = DB.events().findById(event.getId());
+                calendarView.add(fxmlLoader.load(), cIndex, rIndex, cSpan, 1);
+				EventController eventController = fxmlLoader.getController();
+				eventController.event = getEvent;
+				eventController.eventBox.setStyle("-fx-background-color: " + event.getColor() + ";");
+                eventController.eventBox.setMaxWidth(Double.MAX_VALUE);
+				eventController.eventName.setText(event.getName());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 	}
 		
-	}
+}
 
 
 

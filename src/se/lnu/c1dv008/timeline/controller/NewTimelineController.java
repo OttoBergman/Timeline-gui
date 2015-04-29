@@ -33,6 +33,8 @@ public class NewTimelineController {
     @FXML
     private Label errorText;
 
+    public TimelineController timelineController;
+
     @FXML
     private void onCreateClick() {
         if (!timelineTitle.getText().isEmpty() || timelineStartDate.getValue() != null ||
@@ -40,10 +42,10 @@ public class NewTimelineController {
             Timeline timeline = new Timeline(timelineTitle.getText());
             timeline.setTimeBounds(timelineStartDate.getValue().toString(), timelineEndDate.getValue().toString());
             DB.timelines().save(timeline);
+            timelineController.draw();
             Stage stage = (Stage) createTimelineBtn.getScene().getWindow();
             stage.close();
-            TimelineController timelineController = new TimelineController();
-            timelineController.draw();
+
 
 
         }

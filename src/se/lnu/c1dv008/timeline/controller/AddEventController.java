@@ -2,6 +2,7 @@ package se.lnu.c1dv008.timeline.controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import se.lnu.c1dv008.timeline.dao.DB;
 import se.lnu.c1dv008.timeline.model.Event;
@@ -36,26 +37,37 @@ public class AddEventController {
 
     public Timeline timeline;
 
+    public TimelineController timelineController;
+
 
     @FXML
     private void onCreate() {
 
+        Timeline time = DB.timelines().findById(timeline.getId());
 
         if (!addEventTitle.getText().isEmpty() || addEventStartDate.getValue() != null ||
-                addEventEndDate.getValue() != null || addEventDescription.getText().isEmpty()) {
+                addEventEndDate.getValue() != null || !addEventDescription.getText().isEmpty()) {
             Event event = new Event(addEventTitle.getText(), addEventDescription.getText(),
                     addEventStartDate.getValue().toString(), addEventEndDate.getValue().toString(),
-                    addEventColorPicker.getCustomColors().toString(), timeline.getId());
-
+                    toRGBCode(addEventColorPicker.getValue()), time.getId());
             DB.events().save(event);
+            TimelineController.timeLineController.draw();
             Stage stage = (Stage) addEventCreate.getScene().getWindow();
             stage.close();
-            TimelineController timelineController = new TimelineController();
-            timelineController.draw();
-
 
         }
     }
 
-    public void setTimeline(Timeline time) { this.timeline = time; }
+    @FXML
+    private void onCancel() {
+        Stage stage = (Stage) addEventCancel.getScene().getWindow();
+        stage.close();
+    }
+
+    public static String toRGBCode(Color color) {
+        return String.format( "#%02X%02X%02X",
+                (int)( color.getRed() * 255 ),
+                (int)( color.getGreen() * 255 ),
+                (int)( color.getBlue() * 255 ) );
+    }
 }

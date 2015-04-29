@@ -31,7 +31,7 @@ public class TimelineController implements Initializable {
     private MenuItem newTimeline;
 
     @FXML
-    private VBox vboxForGridpane;
+    private  VBox vboxForGridpane;
 
     @FXML
     private MenuItem openTimeline;
@@ -42,16 +42,22 @@ public class TimelineController implements Initializable {
     @FXML
     private TextArea textView;
 
+    public static TimelineController timeLineController;
+
+
     @FXML
     void newTimelineCreate(ActionEvent event) {
         FXMLLoader fxmlLoader = new FXMLLoader(CalendarView.class.getResource("NewTimeline.fxml"));
         Parent root = null;
         try {
             root = fxmlLoader.load();
+            NewTimelineController newTimelineController = fxmlLoader.getController();
+            newTimelineController.timelineController = this;
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+        CalendarView.timelineController = this;
         Stage stage = new Stage();
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setOpacity(1);
@@ -65,14 +71,17 @@ public class TimelineController implements Initializable {
     @PostConstruct
     public void initialize(URL location, ResourceBundle resources) {
 
+        timeLineController = this;
         draw();
     }
 
     public void draw() {
 
+        this.vboxForGridpane.getChildren().clear();
         List<Timeline> timelines = DB.timelines().findAll();
+        List<Event> events = DB.events().findAll();
 
-        vboxForGridpane.setMaxWidth(Double.MAX_VALUE);
+        this.vboxForGridpane.setMaxWidth(Double.MAX_VALUE);
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
         for (int i = 0; i < timelines.size(); i++) {
@@ -80,21 +89,20 @@ public class TimelineController implements Initializable {
             Timeline time = timelines.get(i);
             LocalDate tlstartDate = LocalDate.parse(time.getStartDate(), dtf);
             LocalDate tlendDate = LocalDate.parse(time.getEndDate(), dtf);
-            vboxForGridpane.getChildren().add(cv.createView(time, time.getTitle(), tlstartDate.getYear(),
+            this.vboxForGridpane.getChildren().add(cv.createView(time, time.getTitle(), tlstartDate.getYear(),
                     tlstartDate.getMonthValue(), tlstartDate.getDayOfMonth(),
                     tlendDate.getYear(), tlendDate.getMonthValue(), tlendDate.getDayOfMonth()));
 
-            List<Event> events = DB.events().findAll();
-
-            for (int j = 0; j < events.size(); j++) {
+            for (int j = 1; j < events.size(); j++) {
                 Event event = events.get(j);
-                LocalDate eventStartDate = LocalDate.parse(event.getStartTime(), dtf);
-                LocalDate eventEndDate = LocalDate.parse(event.getEndTime(), dtf);
-                cv.event(events.get(j), Period.between(tlstartDate, eventStartDate).getDays(), j,
-                        Period.between(eventStartDate, eventEndDate).getDays());
+                if (event.getTimelineId() == time.getId()) {
+                    LocalDate eventStartDate = LocalDate.parse(event.getStartTime(), dtf);
+                    LocalDate eventEndDate = LocalDate.parse(event.getEndTime(), dtf);
+                    cv.event(event, Period.between(tlstartDate, eventStartDate).plusDays(1).getDays(), j,
+                            Period.between(eventStartDate, eventEndDate).plusDays(1).getDays());
+                }
             }
         }
-
     }
 
 }

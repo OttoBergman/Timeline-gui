@@ -8,8 +8,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-
-<VBox fx:id="eventBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#popupOnRightClick" prefHeight="30.0" prefWidth="200.0" style="-fx-background-radius: 10; -fx-background-color: lightgreen; -fx-border-radius: 10;" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="se.lnu.c1dv008.timeline.controller.EventController">
+<VBox fx:id="eventBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#popupOnLeftClick" prefHeight="25.0" prefWidth="200.0" style="-fx-background-radius: 10; -fx-border-radius: 10;" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="se.lnu.c1dv008.timeline.controller.EventController">
    <children>
       <GridPane prefHeight="104.0" prefWidth="600.0" style="-fx-background-radius: 10;">
         <columnConstraints>
