@@ -1,6 +1,5 @@
 package se.lnu.c1dv008.timeline.view;
 
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -11,7 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
@@ -19,10 +18,11 @@ import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.controlsfx.control.PopOver;
 import se.lnu.c1dv008.timeline.controller.AddEventController;
 import se.lnu.c1dv008.timeline.controller.EventController;
+import se.lnu.c1dv008.timeline.controller.ModifyTimelineController;
 import se.lnu.c1dv008.timeline.controller.TimelineController;
-import se.lnu.c1dv008.timeline.dao.DB;
 import se.lnu.c1dv008.timeline.model.Event;
 import se.lnu.c1dv008.timeline.model.Timeline;
 
@@ -48,7 +48,6 @@ public class CalendarView {
 
 		LocalDate start = LocalDate.of(startYear, startMonth, startDay);
 		LocalDate end = LocalDate.of(endYear, endMonth, endDay);
-		LocalDate today = LocalDate.now();
 
 		int rowIndex = 1;
 		for (LocalDate date = start; ! date.isAfter(end); date = date.plusDays(1)) {
@@ -104,34 +103,62 @@ public class CalendarView {
 		scroller.maxWidth(Double.MAX_VALUE);
 		VBox vContain = new VBox();
 		Label titleLabel = new Label(title);
+
+		titleLabel.setOnMouseClicked(event -> {
+
+			PopOver popOver = new PopOver();
+			FXMLLoader loader = new FXMLLoader(CalendarView.class.getResource("ModifyTimeline.fxml"));
+
+			try {
+				popOver.setArrowLocation(PopOver.ArrowLocation.LEFT_TOP);
+				popOver.setContentNode(loader.load());
+				ModifyTimelineController modifyTimelineController = loader.getController();
+				DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+				modifyTimelineController.modifyTimelineTitle.setText(timeline.getTitle());
+				modifyTimelineController.modifyTimelineStartDate.setValue(LocalDate.parse(timeline.getStartDate(), dtf));
+				modifyTimelineController.modifyTimelineEndDate.setValue(LocalDate.parse(timeline.getEndDate(), dtf));
+				modifyTimelineController.time = timeline;
+				modifyTimelineController.popOver = popOver;
+
+				popOver.show(titleLabel);
+				final PopOver finalPopOver = popOver;
+				popOver.getContentNode().setOnMouseClicked(ev -> {
+					if (ev.getButton() == MouseButton.SECONDARY) {
+						finalPopOver.hide();
+					}
+				});
+			}
+			catch (IOException ex) {
+				ex.printStackTrace();
+			}
+				});
+
+
 		titleLabel.fontProperty().setValue(new Font(20));
 		vContain.getChildren().add(titleLabel);
 		vContain.setAlignment(Pos.TOP_CENTER);
 		Button addEventBtn = new Button("Add Event");
 
-		addEventBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent event) {
+		addEventBtn.setOnMouseClicked(event -> {
 
-				FXMLLoader fxmlLoader = new FXMLLoader(CalendarView.class.getResource("AddEventView.fxml"));
-				Parent root = null;
-				try {
-					root = fxmlLoader.load();
-					AddEventController addEventController = fxmlLoader.getController();
-					addEventController.timeline = timeline;
-					addEventController.timelineController = timelineController;
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				Stage stage = new Stage();
-				stage.initModality(Modality.APPLICATION_MODAL);
-				stage.setOpacity(1);
-				stage.setTitle("Add new event");
-				stage.setScene(new Scene(root));
-				stage.show();
-			}
-		});
+            FXMLLoader fxmlLoader = new FXMLLoader(CalendarView.class.getResource("AddEventView.fxml"));
+            Parent root = null;
+            try {
+                root = fxmlLoader.load();
+                AddEventController addEventController = fxmlLoader.getController();
+                addEventController.timeline = timeline;
+                addEventController.timelineController = timelineController;
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setOpacity(1);
+            stage.setTitle("Add new event");
+            stage.setScene(new Scene(root));
+            stage.show();
+        });
 
 
 
@@ -193,13 +220,14 @@ public class CalendarView {
 
 			FXMLLoader fxmlLoader = new FXMLLoader(CalendarView.class.getResource("EventView.fxml"));
 			try {
-                Event getEvent = DB.events().findById(event.getId());
                 calendarView.add(fxmlLoader.load(), cIndex, rIndex, cSpan, 1);
 				EventController eventController = fxmlLoader.getController();
-				eventController.event = getEvent;
-				eventController.eventBox.setStyle("-fx-background-color: " + event.getColor() + ";");
+				eventController.eventBox.setStyle("-fx-background-color: " + event.getColor() + ";" +
+						"-fx-border-color: black;" + "-fx-background-radius: 10;" +
+						"-fx-border-radius: 10;");
                 eventController.eventBox.setMaxWidth(Double.MAX_VALUE);
 				eventController.eventName.setText(event.getName());
+                eventController.event = event;
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

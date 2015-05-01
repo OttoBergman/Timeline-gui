@@ -26,31 +26,32 @@ public class PopOverController {
     public TextArea popOverEventDescription;
 
     @FXML
-    public Button popOverEventUpdate;
+    public Button popOverUpdateEvent;
 
     @FXML
-    public Button popOverEventDelete;
+    public Button popOverDeleteEvent;
 
     @FXML
     public ColorPicker popOverEventColor;
 
+    public PopOver popOver;
+
     public Event event;
 
-    public TimelineController timelineController;
 
-    public PopOver popOver;
 
     @FXML
     private void onUpdateClick() {
 
 
-        Event getEvent = DB.events().findById(event.getId());
         if (!popOverEventTitle.getText().isEmpty() || popOverEventStartDate.getValue() != null ||
                 popOverEventEndDate.getValue() != null || !popOverEventDescription.getText().isEmpty()) {
-            Event event = new Event(popOverEventTitle.getText(), popOverEventDescription.getText(),
-                    popOverEventStartDate.getValue().toString(), popOverEventEndDate.getValue().toString(),
-            toRGBCode(popOverEventColor.getValue()), getEvent.getTimelineId());
-            DB.events().update(getEvent);
+            event.setName(popOverEventTitle.getText());
+            event.setDescription(popOverEventDescription.getText());
+            event.setStartTime(popOverEventStartDate.getValue().toString());
+            event.setEndTime(popOverEventEndDate.getValue().toString());
+            event.setColor(toRGBCode(popOverEventColor.getValue()));
+            DB.events().update(event);
             TimelineController.timeLineController.draw();
             popOver.hide();
         }

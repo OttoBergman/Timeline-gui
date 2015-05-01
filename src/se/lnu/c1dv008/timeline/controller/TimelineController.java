@@ -1,13 +1,11 @@
 package se.lnu.c1dv008.timeline.controller;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextArea;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -27,6 +25,7 @@ import java.util.ResourceBundle;
 
 public class TimelineController implements Initializable {
 
+
     @FXML
     private MenuItem newTimeline;
 
@@ -34,19 +33,15 @@ public class TimelineController implements Initializable {
     private  VBox vboxForGridpane;
 
     @FXML
-    private MenuItem openTimeline;
-
-    @FXML
     private MenuItem timelineHelp;
 
-    @FXML
-    private TextArea textView;
 
     public static TimelineController timeLineController;
 
 
+
     @FXML
-    void newTimelineCreate(ActionEvent event) {
+    void newTimelineCreate() {
         FXMLLoader fxmlLoader = new FXMLLoader(CalendarView.class.getResource("NewTimeline.fxml"));
         Parent root = null;
         try {

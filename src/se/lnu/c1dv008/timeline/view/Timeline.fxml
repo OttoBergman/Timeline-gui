@@ -16,7 +16,6 @@
                 <Menu mnemonicParsing="false" text="File">
                   <items>
                     <MenuItem fx:id="newTimeline" mnemonicParsing="false" onAction="#newTimelineCreate" text="New Timeline" />
-                        <MenuItem fx:id="openTimeline" mnemonicParsing="false" text="Open Timeline" />
                         <MenuItem fx:id="timelineHelp" mnemonicParsing="false" text="Help" />
                   </items>
                 </Menu>
