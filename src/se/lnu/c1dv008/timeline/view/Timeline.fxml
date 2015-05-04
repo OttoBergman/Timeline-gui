@@ -23,7 +23,7 @@
             </MenuBar>
          </children>
       </VBox>
-      <ScrollPane fitToHeight="true" fitToWidth="true" layoutY="29.0" prefHeight="771.0" prefWidth="1200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+      <ScrollPane fitToHeight="true" fitToWidth="true" layoutY="29.0" prefHeight="771.0" prefWidth="1200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="29.0">
          <content>
             <VBox fx:id="vboxForGridpane" />
          </content>

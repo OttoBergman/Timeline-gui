@@ -47,18 +47,18 @@ public class TimelineController implements Initializable {
         try {
             root = fxmlLoader.load();
             NewTimelineController newTimelineController = fxmlLoader.getController();
-            newTimelineController.timelineController = this;
+            newTimelineController.setErrorTextVisible(false);
+
+            CalendarView.timelineController = this;
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setOpacity(1);
+            stage.setTitle("Create new timeline");
+            stage.setScene(new Scene(root));
+            stage.showAndWait();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        CalendarView.timelineController = this;
-        Stage stage = new Stage();
-        stage.initModality(Modality.APPLICATION_MODAL);
-        stage.setOpacity(1);
-        stage.setTitle("Create new timeline");
-        stage.setScene(new Scene(root));
-        stage.showAndWait();
 
     }
 
@@ -80,6 +80,7 @@ public class TimelineController implements Initializable {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
         for (int i = 0; i < timelines.size(); i++) {
+            int counter = 1;
             CalendarView cv = new CalendarView();
             Timeline time = timelines.get(i);
             LocalDate tlstartDate = LocalDate.parse(time.getStartDate(), dtf);
@@ -93,8 +94,9 @@ public class TimelineController implements Initializable {
                 if (event.getTimelineId() == time.getId()) {
                     LocalDate eventStartDate = LocalDate.parse(event.getStartTime(), dtf);
                     LocalDate eventEndDate = LocalDate.parse(event.getEndTime(), dtf);
-                    cv.event(event, Period.between(tlstartDate, eventStartDate).plusDays(1).getDays(), j,
+                    cv.event(event, Period.between(tlstartDate, eventStartDate).plusDays(1).getDays(), counter,
                             Period.between(eventStartDate, eventEndDate).plusDays(1).getDays());
+                    counter++;
                 }
             }
         }
