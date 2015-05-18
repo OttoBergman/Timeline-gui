@@ -273,8 +273,11 @@ public class CalendarView {
     public void eventWithoutDuration(EventWithoutDuration eventWithoutDuration, int cIndex, int rIndex){
 
         FXMLLoader fxmlLoader = new FXMLLoader(CalendarView.class.getResource("EventNoDurationView.fxml"));
+        Parent root;
         try {
-            calendarView.add(fxmlLoader.load(), cIndex, rIndex, 1, 1);
+            root = fxmlLoader.load();
+            root.setId("eventHolder");
+            calendarView.add(root, cIndex, rIndex, 1, 1);
             EventNoDurationController eventNoDurationController = fxmlLoader.getController();
             eventNoDurationController.eventBox.setStyle("-fx-background-color: " + eventWithoutDuration.getColor() + ";" +
                     "-fx-border-color: black;");

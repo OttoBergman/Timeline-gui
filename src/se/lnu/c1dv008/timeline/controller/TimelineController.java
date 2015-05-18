@@ -8,6 +8,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -38,7 +39,7 @@ public class TimelineController implements Initializable {
     private MenuItem newTimeline;
 
     @FXML
-    private  VBox vboxForGridpane;
+    private VBox vboxForGridpane;
 
     @FXML
     private MenuItem timelineHelp;
@@ -62,7 +63,6 @@ public class TimelineController implements Initializable {
 
 
     public static TimelineController timeLineController;
-
 
 
     @FXML
@@ -105,17 +105,8 @@ public class TimelineController implements Initializable {
             Main.masterDetailPane.setDetailSide(Side.LEFT);
             Main.masterDetailPane.setDividerPosition(0.15);
             //Main.masterDetailPane.setAnimated(false);
-            vboxForGridpane.setOnMouseClicked(event -> {
 
-                if (Main.masterDetailPane.isShowDetailNode()) {
-                    Main.masterDetailPane.setShowDetailNode(false);
-                } else {
-                    Main.masterDetailPane.setShowDetailNode(true);
-                }
-
-            });
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
@@ -195,7 +186,35 @@ public class TimelineController implements Initializable {
             }
         }
     }
-}
+
+    @FXML
+    private void showHideDetailPane(MouseEvent event) {
+
+        if (event.getPickResult().getIntersectedNode().getId() == null) {
+            if (Main.masterDetailPane.isShowDetailNode()) {
+                Main.masterDetailPane.setShowDetailNode(false);
+            } else {
+                Main.masterDetailPane.setShowDetailNode(true);
+            }
+        }
+
+
+        else if (event.getPickResult().getIntersectedNode().getId().equals("gridpaneForEvent") ||
+                event.getPickResult().getIntersectedNode().getId().equals("gridpaneForEventNoDuration")||
+                event.getPickResult().getIntersectedNode().getId().equals("eventName")) {
+            event.consume();
+        }
+            else{
+                if (Main.masterDetailPane.isShowDetailNode()) {
+                    Main.masterDetailPane.setShowDetailNode(false);
+                } else {
+                    Main.masterDetailPane.setShowDetailNode(true);
+                }
+            }
+        }
+    }
+
+
 
 
 
