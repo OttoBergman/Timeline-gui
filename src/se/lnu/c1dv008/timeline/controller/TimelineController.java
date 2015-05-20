@@ -8,8 +8,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -18,6 +18,7 @@ import javafx.stage.StageStyle;
 import org.controlsfx.control.MasterDetailPane;
 import se.lnu.c1dv008.timeline.Main;
 import se.lnu.c1dv008.timeline.dao.DB;
+import se.lnu.c1dv008.timeline.model.AllEvents;
 import se.lnu.c1dv008.timeline.model.Event;
 import se.lnu.c1dv008.timeline.model.EventWithoutDuration;
 import se.lnu.c1dv008.timeline.model.Timeline;
@@ -28,9 +29,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
-import java.util.ResourceBundle;
-import java.util.TreeSet;
+import java.util.*;
 
 public class TimelineController implements Initializable {
 
@@ -55,6 +54,9 @@ public class TimelineController implements Initializable {
 
     @FXML
     private MasterDetailPane timelineMasterDetailPane;
+
+    @FXML
+    private Pane paneForOpeningSidePane;
 
 
     public MasterDetailPane masterDetailPane;
@@ -100,11 +102,11 @@ public class TimelineController implements Initializable {
         AnchorPane root;
         try {
             root = fxmlLoader.load();
-            TimelineSelectController timelineSelectController = fxmlLoader.getController();
             Main.masterDetailPane.setDetailNode(root);
             Main.masterDetailPane.setDetailSide(Side.LEFT);
             Main.masterDetailPane.setDividerPosition(0.15);
-            //Main.masterDetailPane.setAnimated(false);
+            Main.masterDetailPane.setShowDetailNode(false);
+
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -117,7 +119,13 @@ public class TimelineController implements Initializable {
         this.vboxForGridpane.getChildren().clear();
         TreeSet<Timeline> timelines = TimelineSelectController.getTimelinesSelected();
         List<Event> events = DB.events().findAll();
+        Collections.sort(events);
         List<EventWithoutDuration> eventWithoutDurations = DB.eventsWithoutDuration().findAll();
+        List<AllEvents> test = new ArrayList<>();
+        test.addAll(events);
+        test.addAll(eventWithoutDurations);
+        Collections.sort(test);
+        Collections.sort(eventWithoutDurations);
 
         this.vboxForGridpane.setMaxWidth(Double.MAX_VALUE);
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -133,35 +141,61 @@ public class TimelineController implements Initializable {
                     tlstartDate.getMonthValue(), tlstartDate.getDayOfMonth(),
                     tlendDate.getYear(), tlendDate.getMonthValue(), tlendDate.getDayOfMonth()));
 
-            for (int j = 0; j < events.size(); j++) {
-                Event event = events.get(j);
-                if (event.getTimelineId() == timeline.getId()) {
-                    LocalDate eventStartDate = LocalDate.parse(event.getStartTime(), dtf);
-                    LocalDate eventEndDate = LocalDate.parse(event.getEndTime(), dtf);
-                    if (timeline.getShowVal().equals("Days")) {
+            for (int j = 0; j < test.size(); j++) {
 
-                        cv.event(event, (int) ChronoUnit.DAYS.between(tlstartDate, eventStartDate), counter,
-                                (int) ChronoUnit.DAYS.between(eventStartDate, eventEndDate) + 1);
-                        counter++;
-                    } else if (timeline.getShowVal().equals("Months")) {
-                        int diffYearEvent = eventEndDate.getYear() - eventStartDate.getYear();
-                        int diffMonthEvent = diffYearEvent * 12 + eventEndDate.getMonthValue() - eventStartDate.getMonthValue();
-                        int diffYearTimeline = eventStartDate.getYear() - tlstartDate.getYear();
-                        int diffMonthTimeline = diffYearTimeline * 12 + eventStartDate.getMonthValue() - tlstartDate.getMonthValue();
+                    AllEvents event = test.get(j);
+                    if (event.getTimelineId() == timeline.getId()) {
+                        LocalDate eventStartDate = LocalDate.parse(event.getStartTime(), dtf);
 
-                        cv.event(event, diffMonthTimeline, counter, diffMonthEvent + 1);
-                        counter++;
-                    } else if (timeline.getShowVal().equals("Years")) {
-                        int diffYearEvent = eventEndDate.getYear() - eventStartDate.getYear();
-                        int diffYearTimeline = eventStartDate.getYear() - tlstartDate.getYear();
 
-                        cv.event(event, diffYearTimeline, counter, diffYearEvent + 1);
-                        counter++;
+                        if (timeline.getShowVal().equals("Days")) {
+                            if (event.getEndTime() != null) {
+                                LocalDate eventEndDate = LocalDate.parse(event.getEndTime(), dtf);
+                                cv.event((Event) event, (int) ChronoUnit.DAYS.between(tlstartDate, eventStartDate), counter,
+                                        (int) ChronoUnit.DAYS.between(eventStartDate, eventEndDate) + 1);
+                                counter++;
+                            } else {
+                                cv.eventWithoutDuration((EventWithoutDuration) event,
+                                        (int) ChronoUnit.DAYS.between(tlstartDate, eventStartDate), counter);
+                                counter++;
+                            }
+                        } else if (timeline.getShowVal().equals("Months")) {
+                            if (event.getEndTime() != null) {
+                                LocalDate eventEndDate = LocalDate.parse(event.getEndTime(), dtf);
+                                int diffYearEvent = eventEndDate.getYear() - eventStartDate.getYear();
+                                int diffMonthEvent = diffYearEvent * 12 + eventEndDate.getMonthValue() - eventStartDate.getMonthValue();
+                                int diffYearTimeline = eventStartDate.getYear() - tlstartDate.getYear();
+                                int diffMonthTimeline = diffYearTimeline * 12 + eventStartDate.getMonthValue() - tlstartDate.getMonthValue();
+
+                                cv.event((Event) event, diffMonthTimeline, counter, diffMonthEvent + 1);
+                                counter++;
+                            } else {
+                                int diffYearTimeline = eventStartDate.getYear() - tlstartDate.getYear();
+                                int diffMonthTimeline = diffYearTimeline * 12 + eventStartDate.getMonthValue() - tlstartDate.getMonthValue();
+
+                                cv.eventWithoutDuration((EventWithoutDuration) event, diffMonthTimeline, counter);
+                                counter++;
+                            }
+                        } else if (timeline.getShowVal().equals("Years")) {
+                            if (event.getEndTime() != null) {
+                                LocalDate eventEndDate = LocalDate.parse(event.getEndTime(), dtf);
+                                int diffYearEvent = eventEndDate.getYear() - eventStartDate.getYear();
+                                int diffYearTimeline = eventStartDate.getYear() - tlstartDate.getYear();
+
+                                cv.event((Event) event, diffYearTimeline, counter, diffYearEvent + 1);
+                                counter++;
+                            }
+                                else {
+                                int diffYearTimeline = eventStartDate.getYear() - tlstartDate.getYear();
+
+                                cv.eventWithoutDuration((EventWithoutDuration) event, diffYearTimeline, counter);
+                                counter++;
+                                }
+                        }
+
                     }
-
-                }
             }
-            for (int j = 0; j < eventWithoutDurations.size(); j++) {
+            /*for (int j = 0; j < eventWithoutDurations.size(); j++) {
                 EventWithoutDuration eventWithoutDuration = eventWithoutDurations.get(j);
                 if (eventWithoutDuration.getTimelineId() == timeline.getId()) {
                     LocalDate eventStartDate = LocalDate.parse(eventWithoutDuration.getStartTime(), dtf);
@@ -183,39 +217,10 @@ public class TimelineController implements Initializable {
                     }
 
                 }
-            }
+            }*/
         }
     }
-
-    @FXML
-    private void showHideDetailPane(MouseEvent event) {
-
-        if (event.getPickResult().getIntersectedNode().getId() == null) {
-            if (Main.masterDetailPane.isShowDetailNode()) {
-                Main.masterDetailPane.setShowDetailNode(false);
-            } else {
-                Main.masterDetailPane.setShowDetailNode(true);
-            }
-        }
-
-
-        else if (event.getPickResult().getIntersectedNode().getId().equals("gridpaneForEvent") ||
-                event.getPickResult().getIntersectedNode().getId().equals("gridpaneForEventNoDuration")||
-                event.getPickResult().getIntersectedNode().getId().equals("eventName")) {
-            event.consume();
-        }
-            else{
-                if (Main.masterDetailPane.isShowDetailNode()) {
-                    Main.masterDetailPane.setShowDetailNode(false);
-                } else {
-                    Main.masterDetailPane.setShowDetailNode(true);
-                }
-            }
-        }
-    }
-
-
-
+}
 
 
 

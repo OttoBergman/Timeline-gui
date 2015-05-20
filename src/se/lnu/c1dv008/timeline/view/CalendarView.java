@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.effect.InnerShadow;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
@@ -96,10 +97,14 @@ public class CalendarView {
 
             // Add the headers for the gridpane so this adds the day and month at the top of the gridpane
             DateTimeFormatter dayFormatter = DateTimeFormatter.ofPattern("yyyy");
+            InnerShadow is = new InnerShadow();
+            is.setOffsetX(4.0f);
+            is.setOffsetY(4.0f);
             int pos = 0;
             for (LocalDate date = start; !date.isAfter(end); date = date.plusYears(1)) {
-
                 Label label = new Label(date.format(dayFormatter));
+
+                label.setEffect(is);
                 label.setPadding(new Insets(1));
                 label.setTextAlignment(TextAlignment.CENTER);
                 GridPane.setHalignment(label, HPos.CENTER);
@@ -111,7 +116,7 @@ public class CalendarView {
 		// Create scrollpane to add the gridpane into and the title label
 		ScrollPane scroller = new ScrollPane(calendarView);
 		scroller.maxWidth(Double.MAX_VALUE);
-        //scroller.prefWidth(1185);
+        scroller.setId("scrollerForEvents");
         StackPane displayInfo = new StackPane();
         displayInfo.setAlignment(Pos.CENTER);
 		VBox vContain = new VBox();
@@ -122,6 +127,7 @@ public class CalendarView {
 		displayInfo.setAlignment(titleLabel, Pos.CENTER);
 		displayInfo.setAlignment(startDateLabel, Pos.CENTER_LEFT);
 		displayInfo.setAlignment(endDateLabel, Pos.CENTER_RIGHT);
+        displayInfo.setId("displayInfo");
 
 		// Method to create popover when the timeline label is clicked on and load the fxml file into it
 		titleLabel.setOnMouseClicked(event -> {
@@ -241,10 +247,12 @@ public class CalendarView {
         hboxForButtons.setAlignment(Pos.CENTER_RIGHT);
         stackPaneForBtn.getChildren().addAll(hboxForButtons);
         stackPaneForBtn.setAlignment(hboxForButtons, Pos.CENTER_RIGHT);
+        stackPaneForBtn.setId("stackpaneForBtns");
 
         stackPaneForBtn.setPadding(new Insets(5, 0, 0, 0));
 		vContain.getChildren().addAll(scroller, stackPaneForBtn);
 		vContain.setPadding(new Insets(15, 5, 15, 5));
+        vContain.setId("vboxContainingScroller");
 		return vContain;
 
 	}
@@ -273,11 +281,8 @@ public class CalendarView {
     public void eventWithoutDuration(EventWithoutDuration eventWithoutDuration, int cIndex, int rIndex){
 
         FXMLLoader fxmlLoader = new FXMLLoader(CalendarView.class.getResource("EventNoDurationView.fxml"));
-        Parent root;
         try {
-            root = fxmlLoader.load();
-            root.setId("eventHolder");
-            calendarView.add(root, cIndex, rIndex, 1, 1);
+            calendarView.add(fxmlLoader.load(), cIndex, rIndex, 1, 1);
             EventNoDurationController eventNoDurationController = fxmlLoader.getController();
             eventNoDurationController.eventBox.setStyle("-fx-background-color: " + eventWithoutDuration.getColor() + ";" +
                     "-fx-border-color: black;");

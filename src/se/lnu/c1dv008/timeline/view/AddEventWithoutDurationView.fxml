@@ -29,7 +29,7 @@
                </font>
             </Label>
             <DatePicker fx:id="addEventStartDate" onAction="#setStartdate" promptText="Start Date" GridPane.columnSpan="2147483647" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
-            <TextArea fx:id="addEventDescription" prefHeight="163.0" prefWidth="262.0" promptText="Event Description" GridPane.columnSpan="2147483647" GridPane.rowIndex="4">
+            <TextArea fx:id="addEventDescription" prefHeight="163.0" prefWidth="262.0" promptText="Event Description" wrapText="true" GridPane.columnSpan="2147483647" GridPane.rowIndex="4">
                <font>
                   <Font name="Ubuntu" size="19.0" />
                </font>

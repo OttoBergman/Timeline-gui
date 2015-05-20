@@ -1,33 +1,20 @@
 package se.lnu.c1dv008.timeline.model;
 
-import javax.persistence.*;
 import java.time.LocalDate;
 
-@Entity
-@Table(name = "eventsWithoutDuration")
-public class EventWithoutDuration extends AllEvents{
+/**
+ * Created by otto on 2015-05-20.
+ */
+public class AllEvents implements Comparable<AllEvents> {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     public long id;
-
     public long timelineId;
     public String name;
     public String description;
     public String startTime;
+    public String endTime;
     public String color;
 
-    public EventWithoutDuration() {
-
-    }
-
-    public EventWithoutDuration(String name, String description, String startTime, String color, long timelineId) {
-        this.name = name;
-        this.description = description;
-        this.startTime = startTime;
-        this.color = color;
-        this.timelineId = timelineId;
-    }
 
     public String getName() {
         return name;
@@ -61,6 +48,14 @@ public class EventWithoutDuration extends AllEvents{
         this.startTime = startTime;
     }
 
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
+
     public String getColor() {
         return color;
     }
@@ -78,9 +73,7 @@ public class EventWithoutDuration extends AllEvents{
     }
 
 
-    public int compareTo(EventWithoutDuration o) {
+    public int compareTo(AllEvents o) {
         return LocalDate.parse(this.getStartTime()).compareTo(LocalDate.parse(o.getStartTime()));
     }
-
 }
-

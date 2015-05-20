@@ -10,6 +10,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import se.lnu.c1dv008.timeline.Main;
 import se.lnu.c1dv008.timeline.dao.DB;
 import se.lnu.c1dv008.timeline.view.CalendarView;
 
@@ -69,6 +70,19 @@ public class TimelineToolbarController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+    }
+
+    @FXML
+    private void showDetailPane() {
+
+        if (Main.masterDetailPane.isShowDetailNode()) {
+            Main.masterDetailPane.setShowDetailNode(false);
+        }
+        else {
+            Main.masterDetailPane.setShowDetailNode(true);
+        }
+
 
     }
 
