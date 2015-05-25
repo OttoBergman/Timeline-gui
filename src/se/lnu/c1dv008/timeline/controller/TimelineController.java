@@ -24,6 +24,7 @@ import se.lnu.c1dv008.timeline.model.EventWithoutDuration;
 import se.lnu.c1dv008.timeline.model.Timeline;
 import se.lnu.c1dv008.timeline.view.CalendarView;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
@@ -93,18 +94,18 @@ public class TimelineController implements Initializable {
     }
 
     @Override
-    //@PostConstruct
+    @PostConstruct
     public void initialize(URL location, ResourceBundle resources) {
 
         timeLineController = this;
 
         FXMLLoader fxmlLoader = new FXMLLoader(CalendarView.class.getResource("TimelineSelectView.fxml"));
-        AnchorPane root;
+        Parent root;
         try {
             root = fxmlLoader.load();
             Main.masterDetailPane.setDetailNode(root);
             Main.masterDetailPane.setDetailSide(Side.LEFT);
-            Main.masterDetailPane.setDividerPosition(0.15);
+            Main.masterDetailPane.setDividerPosition(0.17);
             Main.masterDetailPane.setShowDetailNode(false);
 
 
@@ -195,29 +196,6 @@ public class TimelineController implements Initializable {
 
                     }
             }
-            /*for (int j = 0; j < eventWithoutDurations.size(); j++) {
-                EventWithoutDuration eventWithoutDuration = eventWithoutDurations.get(j);
-                if (eventWithoutDuration.getTimelineId() == timeline.getId()) {
-                    LocalDate eventStartDate = LocalDate.parse(eventWithoutDuration.getStartTime(), dtf);
-                    if (timeline.getShowVal().equals("Days")) {
-
-                        cv.eventWithoutDuration(eventWithoutDuration, (int) ChronoUnit.DAYS.between(tlstartDate, eventStartDate), counter);
-                        counter++;
-                    } else if (timeline.getShowVal().equals("Months")) {
-                        int diffYearTimeline = eventStartDate.getYear() - tlstartDate.getYear();
-                        int diffMonthTimeline = diffYearTimeline * 12 + eventStartDate.getMonthValue() - tlstartDate.getMonthValue();
-
-                        cv.eventWithoutDuration(eventWithoutDuration, diffMonthTimeline, counter);
-                        counter++;
-                    } else if (timeline.getShowVal().equals("Years")) {
-                        int diffYearTimeline = eventStartDate.getYear() - tlstartDate.getYear();
-
-                        cv.eventWithoutDuration(eventWithoutDuration, diffYearTimeline, counter);
-                        counter++;
-                    }
-
-                }
-            }*/
         }
     }
 }

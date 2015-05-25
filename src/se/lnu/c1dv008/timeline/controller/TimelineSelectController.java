@@ -37,7 +37,10 @@ public class TimelineSelectController {
     private Label selectingTimelinesTitle;
 
     @FXML
-    private Button updateSelectedTimelinesBtn;
+    private Button showSelectedTimelinesBtn;
+
+    @FXML
+    private Button newTimelineBtn;
 
 
     private static TreeSet<Timeline> timelinesSelected = new TreeSet<>();
@@ -50,6 +53,11 @@ public class TimelineSelectController {
     void initialize() {
         drawTimelineList();
         timelineSelectController = this;
+        showSelectedTimelinesBtn.setOnMouseEntered(event -> showSelectedTimelinesBtn.setStyle("-fx-background-color: #606060;"));
+        showSelectedTimelinesBtn.setOnMouseExited(event -> showSelectedTimelinesBtn.setStyle("-fx-background-color: #404040;"));
+
+        newTimelineBtn.setOnMouseEntered(event -> newTimelineBtn.setStyle("-fx-background-color: #606060;"));
+        newTimelineBtn.setOnMouseExited(event -> newTimelineBtn.setStyle("-fx-background-color: #404040;"));
     }
 
 
@@ -57,7 +65,6 @@ public class TimelineSelectController {
 
         vboxForSelectingTimelines.getChildren().clear();
 
-        //vboxForSelectingTimelines.setPadding(new Insets(5, 0, 0, 0));
         List<Timeline> timelines = DB.timelines().findAll();
 
         for (Timeline time : timelines) {
