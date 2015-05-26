@@ -1,7 +1,6 @@
 package se.lnu.c1dv008.timeline.view;
 
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -9,7 +8,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.effect.InnerShadow;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
@@ -38,7 +36,9 @@ public class CalendarView {
     // Method that creates the gridpane for the timeline, arguments should speak for themselfs
     public VBox createView(Timeline timeline, String title, int startYear, int startMonth,
                            int startDay, int endYear, int endMonth, int endDay) {
+
         calendarView = new GridPane();
+
         // Set max width to maximum so it can expand with the window
         calendarView.maxWidth(Double.MAX_VALUE);
         calendarView.setPrefWidth(1190);
@@ -69,7 +69,7 @@ public class CalendarView {
                 label.setMaxWidth(Double.MAX_VALUE);
                 label.setStyle("-fx-border-color: transparent transparent black transparent;");
                 label.setTextAlignment(TextAlignment.CENTER);
-                GridPane.setHalignment(label, HPos.CENTER);
+                label.setAlignment(Pos.CENTER);
                 calendarView.add(label, pos, 0);
                 pos++;
             }
@@ -89,7 +89,7 @@ public class CalendarView {
                 label.setMaxWidth(Double.MAX_VALUE);
                 label.setStyle("-fx-border-color: transparent transparent black transparent;");
                 label.setTextAlignment(TextAlignment.CENTER);
-                GridPane.setHalignment(label, HPos.CENTER);
+                label.setAlignment(Pos.CENTER);
                 calendarView.add(label, pos, 0);
                 pos++;
             }
@@ -102,19 +102,16 @@ public class CalendarView {
 
             // Add the headers for the gridpane so this adds the day and month at the top of the gridpane
             DateTimeFormatter dayFormatter = DateTimeFormatter.ofPattern("yyyy");
-            InnerShadow is = new InnerShadow();
-            is.setOffsetX(4.0f);
-            is.setOffsetY(4.0f);
             int pos = 0;
             for (LocalDate date = start; !date.isAfter(end); date = date.plusYears(1)) {
-                Label label = new Label(date.format(dayFormatter));
 
-                label.setEffect(is);
+                Label label = new Label(date.format(dayFormatter));
                 label.setMaxWidth(Double.MAX_VALUE);
                 label.setStyle("-fx-border-color: transparent transparent black transparent;");
                 label.setPadding(new Insets(1));
+                label.setAlignment(Pos.CENTER);
                 label.setTextAlignment(TextAlignment.CENTER);
-                GridPane.setHalignment(label, HPos.CENTER);
+
                 calendarView.add(label, pos, 0);
                 pos++;
             }

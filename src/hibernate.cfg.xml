@@ -6,7 +6,7 @@
    <session-factory>
    <property name="hibernate.dialect">org.hibernate.dialect.SQLiteDialect</property>
    <property name="hibernate.connection.driver_class">org.sqlite.JDBC</property>
-   <property name="hibernate.connection.url">jdbc:sqlite:timeline.db</property>
+   <property name="hibernate.connection.url">jdbc:sqlite::resource:timeline.db</property>
    <property name="hibernate.connection.username">root</property>
    <property name="hibernate.connection.password">root</property>
    <!--<property name="hibernate.hbm2ddl.auto">create</property>-->

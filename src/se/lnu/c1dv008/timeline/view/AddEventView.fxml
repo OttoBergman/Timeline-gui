@@ -27,8 +27,8 @@
                   <Font name="Ubuntu" size="42.0" />
                </font>
             </Label>
-            <DatePicker fx:id="addEventStartDate" onAction="#setStartdate" promptText="Start Date" stylesheets="@controlstyling.css" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
-            <DatePicker fx:id="addEventEndDate" promptText="End Date" stylesheets="@controlstyling.css" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+            <DatePicker fx:id="addEventStartDate" editable="false" onAction="#setStartdate" promptText="Start Date" stylesheets="@controlstyling.css" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+            <DatePicker fx:id="addEventEndDate" editable="false" promptText="End Date" stylesheets="@controlstyling.css" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
             <TextArea fx:id="addEventDescription" prefHeight="200.0" prefWidth="200.0" promptText="Event Description" wrapText="true" GridPane.columnSpan="2" GridPane.rowIndex="4">
                <font>
                   <Font name="Ubuntu" size="19.0" />
