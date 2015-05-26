@@ -54,7 +54,9 @@ public class Main extends Application {
 			//root.maxHeight(visualBounds.getHeight());
 			//root.maxWidth(visualBounds.getWidth());
 			primaryStage.setTitle("TimeLine Manager");
-			primaryStage.initStyle(StageStyle.UNDECORATED);
+			if (!System.getProperties().getProperty("os.name").toLowerCase().equals("mac os x")) {
+				primaryStage.initStyle(StageStyle.UNDECORATED);
+			}
 			primaryStage.show();
 
 		} catch(Exception e) {

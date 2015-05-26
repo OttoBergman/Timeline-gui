@@ -147,7 +147,7 @@ public class CalendarView {
                 FXMLLoader loader = new FXMLLoader(CalendarView.class.getResource("ModifyTimeline.fxml"));
 
                 try {
-                    popOver.setArrowLocation(PopOver.ArrowLocation.LEFT_TOP);
+                    //popOver.setArrowLocation(PopOver.ArrowLocation.LEFT_TOP);
                     popOver.setContentNode(loader.load());
                     ModifyTimelineController modifyTimelineController = loader.getController();
                     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");

@@ -18,7 +18,7 @@
          <children>
             <StackPane fx:id="mainMenuBar" maxHeight="30.0" maxWidth="1.7976931348623157E308" onMouseDragged="#onMenuDragged" onMousePressed="#onMenuPressed" prefHeight="30.0" style="-fx-background-color: #404040;">
                <children>
-                  <HBox alignment="CENTER_RIGHT" maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="200.0" StackPane.alignment="CENTER_RIGHT">
+                  <HBox alignment="CENTER_RIGHT" maxWidth="1.7976931348623157E308" minHeight="30.0" minWidth="30.0" prefHeight="100.0" prefWidth="200.0" StackPane.alignment="CENTER_RIGHT">
                      <children>
                         <ImageView fx:id="programMinimizeBtn" fitHeight="50.0" fitWidth="26.0" onMouseClicked="#onMinimize" pickOnBounds="true" preserveRatio="true">
                            <image>

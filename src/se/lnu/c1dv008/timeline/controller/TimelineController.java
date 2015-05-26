@@ -119,14 +119,10 @@ public class TimelineController implements Initializable {
 
         this.vboxForGridpane.getChildren().clear();
         TreeSet<Timeline> timelines = TimelineSelectController.getTimelinesSelected();
-        List<Event> events = DB.events().findAll();
-        Collections.sort(events);
-        List<EventWithoutDuration> eventWithoutDurations = DB.eventsWithoutDuration().findAll();
-        List<AllEvents> test = new ArrayList<>();
-        test.addAll(events);
-        test.addAll(eventWithoutDurations);
-        Collections.sort(test);
-        Collections.sort(eventWithoutDurations);
+        List<AllEvents> allEvents = new ArrayList<>();
+        allEvents.addAll(DB.events().findAll());
+        allEvents.addAll(DB.eventsWithoutDuration().findAll());
+        Collections.sort(allEvents);
 
         this.vboxForGridpane.setMaxWidth(Double.MAX_VALUE);
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -142,9 +138,9 @@ public class TimelineController implements Initializable {
                     tlstartDate.getMonthValue(), tlstartDate.getDayOfMonth(),
                     tlendDate.getYear(), tlendDate.getMonthValue(), tlendDate.getDayOfMonth()));
 
-            for (int j = 0; j < test.size(); j++) {
+            for (int j = 0; j < allEvents.size(); j++) {
 
-                    AllEvents event = test.get(j);
+                    AllEvents event = allEvents.get(j);
                     if (event.getTimelineId() == timeline.getId()) {
                         LocalDate eventStartDate = LocalDate.parse(event.getStartTime(), dtf);
 

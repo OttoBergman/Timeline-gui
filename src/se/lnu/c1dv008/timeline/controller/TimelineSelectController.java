@@ -19,6 +19,7 @@ import se.lnu.c1dv008.timeline.model.Timeline;
 import se.lnu.c1dv008.timeline.view.CalendarView;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
 
@@ -45,6 +46,8 @@ public class TimelineSelectController {
 
     private static TreeSet<Timeline> timelinesSelected = new TreeSet<>();
 
+    private List<Timeline> timelines = new ArrayList<>();
+
 
     public static TimelineSelectController timelineSelectController;
 
@@ -65,7 +68,10 @@ public class TimelineSelectController {
 
         vboxForSelectingTimelines.getChildren().clear();
 
-        List<Timeline> timelines = DB.timelines().findAll();
+        if (!timelines.isEmpty()) {
+            timelines.clear();
+        }
+        timelines = DB.timelines().findAll();
 
         for (Timeline time : timelines) {
                 RadioButton btn = new RadioButton(time.getTitle());
@@ -125,6 +131,11 @@ public class TimelineSelectController {
 
     public void addTimelineToTimelinesSelected(Timeline timeline) {
         timelinesSelected.add(timeline);
+        drawTimelineList();
+    }
+
+    public void removeFromTimelinesSelected(Timeline timeline) {
+        timelinesSelected.remove(timeline);
         drawTimelineList();
     }
 
