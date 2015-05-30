@@ -33,8 +33,8 @@ public class Main extends Application {
 		// Check if database exists next to jar file, if not extract it from jar
 		try {
 			Path path = Paths.get(Main.class.getProtectionDomain().getCodeSource().getLocation().toURI());
-            
-            if (path.endsWith("1DV008-ProjectCourse-master.jar")) {
+
+            if (path.endsWith("Timeline_Manager.jar")) {
 				File dataBaseFilePath = new File(path.getParent().toString() + "/timeline.db");
 
 				if (!dataBaseFilePath.isFile()) {
