@@ -37,7 +37,7 @@ public class EventController {
     public void popupOnLeftClick() {
 
 
-
+        // Open popover and show info when event is clicked, hide it on right click
         if (popOver == null || !popOver.isShowing()) {
             popOver = new PopOver();
 
@@ -74,16 +74,6 @@ public class EventController {
             }
 
         }
-
-        /*
-            popOver.focusedProperty().addListener((ov, t, t1) -> {
-
-                if (t1 == false) {
-                    popOver.hide();
-                }
-            });
-            */
-
     }
 
     public Label getName() {

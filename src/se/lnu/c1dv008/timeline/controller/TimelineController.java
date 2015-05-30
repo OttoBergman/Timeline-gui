@@ -70,6 +70,8 @@ public class TimelineController implements Initializable {
 
     @FXML
     void newTimelineCreate() {
+
+        // Loads a fxml file, sets initial values and show it in a new stage
         FXMLLoader fxmlLoader = new FXMLLoader(CalendarView.class.getResource("NewTimeline.fxml"));
         Parent root;
         try {
@@ -97,6 +99,7 @@ public class TimelineController implements Initializable {
     @PostConstruct
     public void initialize(URL location, ResourceBundle resources) {
 
+        // Add sliding pane and set instance variable on initialization
         timeLineController = this;
 
         FXMLLoader fxmlLoader = new FXMLLoader(CalendarView.class.getResource("TimelineSelectView.fxml"));
@@ -117,6 +120,7 @@ public class TimelineController implements Initializable {
 
     public void draw() {
 
+        // Draws the timelines based on the timelines and events found in the database, sorted on the start dates
         this.vboxForGridpane.getChildren().clear();
         TreeSet<Timeline> timelines = TimelineSelectController.getTimelinesSelected();
         List<AllEvents> allEvents = new ArrayList<>();
@@ -127,6 +131,7 @@ public class TimelineController implements Initializable {
         this.vboxForGridpane.setMaxWidth(Double.MAX_VALUE);
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
+        // Go through the timelines one by one and calls the calendarview class
         for (Timeline timeline : timelines) {
 
             int counter = 1;
@@ -134,17 +139,21 @@ public class TimelineController implements Initializable {
 
             LocalDate tlstartDate = LocalDate.parse(timeline.getStartDate(), dtf);
             LocalDate tlendDate = LocalDate.parse(timeline.getEndDate(), dtf);
+
+            // Add timeline to the view
             this.vboxForGridpane.getChildren().add(cv.createView(timeline, timeline.getTitle(), tlstartDate.getYear(),
                     tlstartDate.getMonthValue(), tlstartDate.getDayOfMonth(),
                     tlendDate.getYear(), tlendDate.getMonthValue(), tlendDate.getDayOfMonth()));
 
+            // Go through the events and add it if it has the correct timeline id for the specific timeline
             for (int j = 0; j < allEvents.size(); j++) {
 
                     AllEvents event = allEvents.get(j);
                     if (event.getTimelineId() == timeline.getId()) {
                         LocalDate eventStartDate = LocalDate.parse(event.getStartTime(), dtf);
 
-
+                        // Checks if it should draw days monts or years only and if endtime is null
+                        // If endtime is null then it is a no duration event
                         if (timeline.getShowVal().equals("Days")) {
                             if (event.getEndTime() != null) {
                                 LocalDate eventEndDate = LocalDate.parse(event.getEndTime(), dtf);

@@ -44,7 +44,7 @@ public class PopOverForNoDurationEventsController {
     @FXML
     private void onUpdateClick() {
 
-
+        // Gets values and updates the event if values is not null
         if (!popOverEventTitle.getText().isEmpty() || popOverEventStartDate.getValue() != null
                 || !popOverEventDescription.getText().isEmpty()) {
             eventWithoutDuration.setName(popOverEventTitle.getText());
@@ -61,18 +61,23 @@ public class PopOverForNoDurationEventsController {
 
     @FXML
     private void onDeleteClick() {
+
+        // Delete the event from the database and then redraws the timelines
         DB.eventsWithoutDuration().delete(eventWithoutDuration);
         TimelineController.timeLineController.draw();
         popOver.hide();
     }
 
     public static String toRGBCode(Color color) {
+
+        // Changing color values into hex values
         return String.format( "#%02X%02X%02X",
                 (int)( color.getRed() * 255 ),
                 (int)( color.getGreen() * 255 ),
                 (int)( color.getBlue() * 255 ) );
     }
 
+    // Set invalid dates to disabled
     private final Callback<DatePicker, DateCell> dayCellFactory =
             new Callback<DatePicker, DateCell>() {
                 public DateCell call(final DatePicker datePicker) {

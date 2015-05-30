@@ -47,7 +47,7 @@ public class PopOverController {
     @FXML
     private void onUpdateClick() {
 
-
+        // Gets the values and updates the event if values is not null
         if (!popOverEventTitle.getText().isEmpty() || popOverEventStartDate.getValue() != null ||
                 popOverEventEndDate.getValue() != null || !popOverEventDescription.getText().isEmpty()) {
             event.setName(popOverEventTitle.getText());
@@ -65,18 +65,23 @@ public class PopOverController {
 
     @FXML
     private void onDeleteClick() {
+
+        // Deletes the event from the database and then redraws the timelines
         DB.events().delete(event);
         TimelineController.timeLineController.draw();
         popOver.hide();
     }
 
     public static String toRGBCode(Color color) {
+
+        // Method for changing a color into hex values
         return String.format( "#%02X%02X%02X",
                 (int)( color.getRed() * 255 ),
                 (int)( color.getGreen() * 255 ),
                 (int)( color.getBlue() * 255 ) );
     }
 
+    // Set invalid dates as disabled
     private final Callback<DatePicker, DateCell> dayCellFactory =
             new Callback<DatePicker, DateCell>() {
                 public DateCell call(final DatePicker datePicker) {

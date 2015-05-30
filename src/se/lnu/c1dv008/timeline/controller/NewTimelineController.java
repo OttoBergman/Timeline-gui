@@ -37,7 +37,7 @@ public class NewTimelineController {
     private Label errorText;
 
     @FXML
-    private ChoiceBox timelineChoiceBox;
+    private ChoiceBox<String> timelineChoiceBox;
 
     private double X;
 
@@ -45,6 +45,8 @@ public class NewTimelineController {
 
     public Stage newTimelineStage;
 
+
+    // Add choice box for selecting to display timeline in days months or years
     @FXML
     private void initialize() {
         timelineChoiceBox.getItems().addAll("Days", "Months", "Years");
@@ -53,12 +55,13 @@ public class NewTimelineController {
 
     @FXML
     private void onCreateClick() {
+        // Get the values, create a timeline from it and store it in the database, if values are null display error text
         if (!timelineTitle.getText().equals("") && timelineStartDate.getValue() != null &&
                 timelineEndDate.getValue() != null) {
             setErrorTextVisible(false);
             Timeline timeline = new Timeline(timelineTitle.getText());
             timeline.setTimeBounds(timelineStartDate.getValue().toString(), timelineEndDate.getValue().toString());
-            timeline.setShowVal(timelineChoiceBox.getSelectionModel().getSelectedItem().toString());
+            timeline.setShowVal(timelineChoiceBox.getSelectionModel().getSelectedItem());
             DB.timelines().save(timeline);
             TimelineSelectController.timelineSelectController.addTimelineToTimelinesSelected(timeline);
             TimelineController.timeLineController.draw();
@@ -77,10 +80,13 @@ public class NewTimelineController {
 
     @FXML
     private void onCancelClick() {
+
+        // Closes stage
         Stage stage = (Stage) cancelCreateTimelineBtn.getScene().getWindow();
         stage.close();
     }
 
+    // Set invalid dates as disabled
     final Callback<DatePicker, DateCell> dayCellFactory =
             new Callback<DatePicker, DateCell>() {
                 public DateCell call(final DatePicker datePicker) {
@@ -139,6 +145,8 @@ public class NewTimelineController {
         return this.timelineChoiceBox;
     }
 
+
+    // Methods for dragging the stage around
     @FXML
     protected void onPressed(MouseEvent event) {
         X = newTimelineStage.getX() - event.getScreenX();

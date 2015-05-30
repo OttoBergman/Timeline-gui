@@ -35,26 +35,31 @@ public class ModifyTimelineController {
     public Button modifyTimelineDeleteBtn;
 
     @FXML
-    private ChoiceBox modifyTimelineChoiceBox;
+    private ChoiceBox<String> modifyTimelineChoiceBox;
 
     public Timeline time;
 
     public PopOver popOver;
+
+    // Add choice box for selecting days months or years for drawing the timeline
 
     @FXML
     void initialize() {
         modifyTimelineChoiceBox.getItems().addAll("Days", "Months", "Years");
     }
 
+
+
     @FXML
     private void updateTimeline() {
 
+        // Get the info and update the event in the database and redraw the timelines
         if (!modifyTimelineTitle.getText().isEmpty() || modifyTimelineStartDate.getValue() != null ||
                 modifyTimelineEndDate.getValue() != null) {
             time.setTimeBounds(modifyTimelineStartDate.getValue().toString(),
                     modifyTimelineEndDate.getValue().toString());
             time.setTitle(modifyTimelineTitle.getText());
-            time.setShowVal(modifyTimelineChoiceBox.getSelectionModel().getSelectedItem().toString());
+            time.setShowVal(modifyTimelineChoiceBox.getSelectionModel().getSelectedItem());
             DB.timelines().update(time);
             TimelineController.timeLineController.draw();
             popOver.hide();
@@ -62,6 +67,9 @@ public class ModifyTimelineController {
     }
     @FXML
     private void deleteTimeline() {
+
+        // Remove events inside the timeline and delete them from the database, then delete timeline from database
+        // Redraw the timelines
         List<Event> events = DB.events().findAll();
         List<EventWithoutDuration> eventWithoutDurations = DB.eventsWithoutDuration().findAll();
         for (Event e : events) {
@@ -84,10 +92,11 @@ public class ModifyTimelineController {
         return modifyTimelineChoiceBox;
     }
 
-    public void setModifyTimelineChoiceBox(ChoiceBox modifyTimelineChoiceBox) {
+    public void setModifyTimelineChoiceBox(ChoiceBox<String> modifyTimelineChoiceBox) {
         this.modifyTimelineChoiceBox = modifyTimelineChoiceBox;
     }
 
+    // Disable days that are invalid
     final Callback<DatePicker, DateCell> dayCellFactory =
             new Callback<DatePicker, DateCell>() {
                 public DateCell call(final DatePicker datePicker) {

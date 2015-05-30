@@ -21,7 +21,7 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label fx:id="eventName" contentDisplay="CENTER" style="-fx-effect: dropshadow( gaussian , rgba(255,255,255, 0.5) , 0,0,1,1);" text="Label" GridPane.columnSpan="2147483647" GridPane.halignment="CENTER">
+            <Label fx:id="eventName" contentDisplay="CENTER" style="-fx-effect: dropshadow( gaussian , rgba(255,255,255, 0.5) , 1,1,1,1);" text="Label" GridPane.columnSpan="2147483647" GridPane.halignment="CENTER">
                <font>
                   <Font name="Ubuntu" size="20.0" />
                </font>

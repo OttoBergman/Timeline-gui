@@ -57,6 +57,10 @@ public class AddEventController {
     @FXML
     private void onCreate() {
 
+        /*
+        Get the timeline id and the info needed to create the event and check if it is valid or not,
+        if it is null then dont create and save event but show the errortext.
+         */
         Timeline time = DB.timelines().findById(timeline.getId());
 
         if (!addEventTitle.getText().isEmpty() && addEventStartDate.getValue() != null &&
@@ -78,10 +82,13 @@ public class AddEventController {
 
     @FXML
     private void onCancel() {
+
+        // Method for closing the stage if cancel button is clicked
         Stage stage = (Stage) addEventCancel.getScene().getWindow();
         stage.close();
     }
 
+    // Method for changing the color of the color picker to hex values
     public static String toRGBCode(Color color) {
         return String.format("#%02X%02X%02X",
                 (int) (color.getRed() * 255),
@@ -90,6 +97,9 @@ public class AddEventController {
     }
 
 
+
+    // Cellfactories to disable dates that are invalid due to being before or after the timelines dates or
+    // if the startdate for the event is after the enddate or if enddate is before the startdate.
 
     private final Callback<DatePicker, DateCell> dayCellFactory =
             new Callback<DatePicker, DateCell>() {
@@ -186,6 +196,8 @@ public class AddEventController {
         errorText.setVisible(visible);
     }
 
+
+    // Methods needed for dragging the stage around.
     @FXML
     protected void onPressed(MouseEvent event) {
         X = addEventStage.getX() - event.getScreenX();

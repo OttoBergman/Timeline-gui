@@ -61,6 +61,8 @@ public class TimelineToolbarController {
     @FXML
     public void initialize() {
 
+        // Set initial values and and hovers on initialization
+
         maximized = false;
 
         setStandardStageWidth(1200);
@@ -83,12 +85,14 @@ public class TimelineToolbarController {
 
     @FXML
     private void closeProgram() {
+        // Method for closing the program with cross button
         DB.closeSessionFactory();
         Platform.exit();
     }
 
     @FXML
     private void onMaximize() {
+        // Method for maximizing stage
         if (mainStage.isFullScreen()) {
             mainStage.setFullScreen(false);
         } else {
@@ -98,6 +102,7 @@ public class TimelineToolbarController {
 
     @FXML
     private void onMinimize() {
+        // Method for minimizing stage
         if (mainStage.isIconified()) {
             mainStage.setIconified(false);
         } else {
@@ -106,6 +111,7 @@ public class TimelineToolbarController {
     }
 
 
+    // Methods for dragging the stage around
     @FXML
     protected void onMenuPressed(MouseEvent event) {
         X = mainStage.getX() - event.getScreenX();
@@ -121,6 +127,8 @@ public class TimelineToolbarController {
 
     @FXML
     void newTimelineCreate() {
+
+        // Load the fxml, add initinal values and show it in a new stage
         FXMLLoader fxmlLoader = new FXMLLoader(CalendarView.class.getResource("NewTimeline.fxml"));
         Parent root;
         try {
@@ -145,6 +153,7 @@ public class TimelineToolbarController {
     @FXML
     private void showDetailPane() {
 
+        // Method for showing the sliding pane if timeline list button is clicked
         if (Main.masterDetailPane.isShowDetailNode()) {
             Main.masterDetailPane.setShowDetailNode(false);
         }

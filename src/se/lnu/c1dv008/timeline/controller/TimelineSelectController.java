@@ -43,7 +43,7 @@ public class TimelineSelectController {
     @FXML
     private Button newTimelineBtn;
 
-
+    //TreeSet for adding selected timelines to show, treeset used since we dont want doubles
     private static TreeSet<Timeline> timelinesSelected = new TreeSet<>();
 
     private List<Timeline> timelines = new ArrayList<>();
@@ -54,6 +54,7 @@ public class TimelineSelectController {
 
     @FXML
     void initialize() {
+        // Draw the list of radio buttons and set hover colors for the buttons on initialize
         drawTimelineList();
         timelineSelectController = this;
         showSelectedTimelinesBtn.setOnMouseEntered(event -> showSelectedTimelinesBtn.setStyle("-fx-background-color: #606060;"));
@@ -66,11 +67,14 @@ public class TimelineSelectController {
 
     public void drawTimelineList() {
 
+        // Clear the children of the vbox and if timelines list is not empty clear it
         vboxForSelectingTimelines.getChildren().clear();
 
         if (!timelines.isEmpty()) {
             timelines.clear();
         }
+
+        // Get the timelines from the database and create radio button for each timeline
         timelines = DB.timelines().findAll();
 
         for (Timeline time : timelines) {
@@ -79,6 +83,8 @@ public class TimelineSelectController {
                 btn.setUserData(time);
                 btn.setPadding(new Insets(15));
                 btn.setWrapText(true);
+
+                // Add listener to add it to treeset if selected, remove it if unselected
                 btn.selectedProperty().addListener((observable, oldValue, newValue) -> {
                     if (newValue) {
                         Timeline t = (Timeline) btn.getUserData();
@@ -89,25 +95,32 @@ public class TimelineSelectController {
                     }
                 });
 
+                // Set the drawn timelines radio buttons to be selected if redrawn
                 if (timelinesSelected.contains(time)) {
                     btn.setSelected(true);
                 }
+                // Add button to the vbox
                 vboxForSelectingTimelines.getChildren().add(btn);
             }
         }
 
 
+    // Method to retrieve treeset
     public static TreeSet<Timeline> getTimelinesSelected() {
         return timelinesSelected;
     }
 
     @FXML
     private void onUpdateClicked() {
+
+        // Method to draw the timelines
         TimelineController.timeLineController.draw();
     }
 
     @FXML
     void newTimelineCreate() {
+
+        // Load fxml and set initial values and then show it in a new stage
         FXMLLoader fxmlLoader = new FXMLLoader(CalendarView.class.getResource("NewTimeline.fxml"));
         Parent root;
         try {
@@ -129,11 +142,13 @@ public class TimelineSelectController {
 
     }
 
+    // Add timeline to treeset
     public void addTimelineToTimelinesSelected(Timeline timeline) {
         timelinesSelected.add(timeline);
         drawTimelineList();
     }
 
+    // Remove timeline from treeset
     public void removeFromTimelinesSelected(Timeline timeline) {
         timelinesSelected.remove(timeline);
         drawTimelineList();
